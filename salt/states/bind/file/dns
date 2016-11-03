@@ -1,0 +1,30 @@
+#!/bin/sh -e
+#chkconfig: 2345 80 90
+#description:auto_run
+#
+# Symlink target for initscripts that have been converted to Upstart.
+ 
+set -e
+ 
+case "$1" in
+start)
+ if [ -x /usr/local/bind/sbin/named ]; then
+ /usr/local/bind/sbin/named -c /usr/local/bind/etc/named.conf -uroot && echo "Bind Server Started"
+ fi
+;;
+stop)
+ kill -9  `cat /usr/local/bind/var/run/named.pid` && echo "Bind Server Stopped"
+;;
+restart)
+ echo "Restart Bind Server ......"
+ $0 stop && $0 start
+;;
+reload)
+ /usr/local/bind/sbin/rndc reload
+;;
+status)
+ /usr/local/bind/sbin/rndc status
+;;
+*)
+echo "$0 start|stop|restart|reload|status"
+esac

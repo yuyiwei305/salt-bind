@@ -1,0 +1,43 @@
+
+options {
+      version "1.1.1";
+      listen-on port 53 {any;};
+      directory "/usr/local/bind/etc/";
+      pid-file "/usr/local/bind/var/run/named.pid";
+      allow-query { any; };
+      Dump-file "/usr/local/bind/var/log/binddump.db";
+      Statistics-file "/usr/local/bind/var/log/named_stats";
+      zone-statistics yes;
+      memstatistics-file "/usr/local/bind/var/log/mem_stats";
+      serial-query-rate 100;
+      recursion yes;
+
+ };
+
+logging {
+        channel warning {
+                file "/usr/local/bind/var/log/dns_warning" versions 10 size 10m;
+                severity warning;
+                print-category yes;
+                print-severity yes;
+                print-time yes;
+        };
+        channel general_dns {
+                file "/usr/local/bind/var/log/dns_log" versions 10 size 10m;
+                severity info;
+                print-category yes;
+                print-severity yes;
+                print-time yes;
+        };
+        category default {
+                warning;
+        };
+        category queries {
+                general_dns;
+        };
+ };
+
+include "/usr/local/bind/etc/CHINANET.acl";
+include "/usr/local/bind/etc/CNC.acl";
+include "/usr/local/bind/etc/view.conf";
+
